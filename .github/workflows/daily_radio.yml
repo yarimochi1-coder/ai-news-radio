@@ -1,0 +1,88 @@
+name: AIニュースラジオ 毎朝自動生成
+
+on:
+  schedule:
+    # 毎朝 7:00 JST（= 22:00 UTC 前日）に実行
+    - cron: "0 22 * * *"
+  workflow_dispatch: # 手動実行も可能
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: パッケージインストール
+        run: pip install -r requirements.txt
+
+      - name: ラジオ生成
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+        run: python generate_radio.py
+
+      # 音声をGitHub Pagesで公開（LINEで再生するため）
+      - name: GitHub Pages用に音声をコピー
+        run: |
+          mkdir -p docs/audio
+          cp 音声/*.mp3 docs/audio/ 2>/dev/null || true
+
+      - name: 生成ファイルをコミット
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "🎙 AIニュースラジオ $(date +%Y-%m-%d) 生成"
+          git push
+
+      # LINE音声送信（GitHub Pages URLが確定した後）
+      - name: LINE音声メッセージ送信
+        env:
+          LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
+          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          TODAY=$(date +%Y-%m-%d)
+          AUDIO_FILE="docs/audio/${TODAY}_AIニュースラジオ.mp3"
+
+          if [ -f "$AUDIO_FILE" ]; then
+            # ファイルサイズからdurationを概算（32kbps）
+            SIZE=$(stat -c%s "$AUDIO_FILE" 2>/dev/null || stat -f%z "$AUDIO_FILE")
+            DURATION=$(( SIZE * 8 / 32000 * 1000 ))
+
+            AUDIO_URL="https://${REPO_OWNER}.github.io/${REPO_NAME}/audio/${TODAY}_AI%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%83%A9%E3%82%B8%E3%82%AA.mp3"
+
+            # まずテキスト通知
+            curl -s -X POST https://api.line.me/v2/bot/message/push \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer ${LINE_CHANNEL_TOKEN}" \
+              -d "{
+                \"to\": \"${LINE_USER_ID}\",
+                \"messages\": [
+                  {
+                    \"type\": \"text\",
+                    \"text\": \"🎙 AIニュースラジオ ${TODAY}\\n\\n音声を生成しました！下の再生ボタンを押してください。\"
+                  },
+                  {
+                    \"type\": \"audio\",
+                    \"originalContentUrl\": \"${AUDIO_URL}\",
+                    \"duration\": ${DURATION}
+                  }
+                ]
+              }"
+            echo "LINE送信完了"
+          fi

@@ -1,0 +1,4 @@
+anthropic
+edge-tts
+duckduckgo-search
+requests

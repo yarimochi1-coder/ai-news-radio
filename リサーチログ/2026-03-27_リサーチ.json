@@ -9,16 +9,9 @@
   {
     "title": "Predicting every women's March Madness game using AI simulator",
     "body": "The 2026 Women's NCAA Tournament has reached the Sweet 16. Here's what teams AI predicts to win each game left in the March Madness bracket:",
-    "url": "https://www.usatoday.com/story/sports/ncaaw/2026/03/26/march-madness-bracket-ai-picks-predictions-womens-ncaa-tournament/89307813007/",
+    "url": "https://www.msn.com/en-us/sports/other/predicting-every-women-s-march-madness-game-using-ai-simulator/ar-AA1ZrZpR",
     "source": "USA TODAY",
-    "date": "2026-03-26T10:06:00+00:00"
-  },
-  {
-    "title": "Stock Market Today (LIVE): Intel Up 10% on Peace Talk Optimism; Meta Aims for 5x Growth by 2031",
-    "body": "Top insights from the latest market news from Wednesday, March 25, from The Motley Fool analysts on Team Rule Breakers and Team Hidden Gems.",
-    "url": "https://www.fool.com/investing/2026/03/25/stock-market-today-live-coverage/",
-    "source": "The Motley Fool",
-    "date": "2026-03-27T01:01:00+00:00"
+    "date": "2026-03-26T10:06:23+00:00"
   },
   {
     "title": "NFL mock draft 2026: AI predicts lowly Jets landing QB Ty Simpson",
@@ -33,6 +26,13 @@
     "url": "https://www.westhawaiitoday.com/2026/03/26/nation-world-news/robot-joins-melania-trump-at-white-house-event-to-tout-ai-teachers/",
     "source": "West Hawaii Today",
     "date": "2026-03-26T10:05:00+00:00"
+  },
+  {
+    "title": "The Biggest Surprise About Nvidia's AI Conference: It Didn't Give the Stock a Boost",
+    "body": "Nvidia gave investors plenty of things to be excited about at its recent conference, but the stock remains in negative territory this year.",
+    "url": "https://www.fool.com/investing/2026/03/26/the-biggest-surprise-about-nvidias-ai-conference-i/",
+    "source": "The Motley Fool",
+    "date": "2026-03-26T17:03:00+00:00"
   },
   {
     "title": "Unisound Posts Strong First Annual Results Since Listing: Revenue Surges Nearly 30%, H2 Loss Narrows Significantly by Over 90%, Profitability in Sight, Charting a New Course in ...",
@@ -77,13 +77,6 @@
     "date": "2026-03-26T23:12:15+00:00"
   },
   {
-    "title": "Claude AI Maker Anthropic Said to Weigh IPO as Soon as October",
-    "body": "Anthropic PBC is considering going public as soon as in October, according to people familiar with the matter, as the artificial intelligence company races with rival OpenAI Inc. to hold an initial public offering.",
-    "url": "https://www.bloomberg.com/news/articles/2026-03-27/claude-ai-maker-anthropic-said-to-weigh-ipo-as-soon-as-october",
-    "source": "Bloomberg",
-    "date": "2026-03-27T00:09:00+00:00"
-  },
-  {
     "title": "Xero partners with Anthropic to put small business finances inside Claude",
     "body": "Xero's multi-year deal with Anthropic embeds Claude in its accounting platform & brings live financial data into Claude.ai for 4.6 million subscribers.",
     "url": "https://thenextweb.com/news/xero-anthropic-claude-small-business-financial-ai",
@@ -91,18 +84,25 @@
     "date": "2026-03-26T17:57:00+00:00"
   },
   {
+    "title": "Claude AI Maker Anthropic Said to Weigh IPO as Soon as October",
+    "body": "Anthropic PBC is considering going public as soon as in October, according to people familiar with the matter, as the artificial intelligence company races with rival OpenAI Inc. to hold an initial public offering.",
+    "url": "https://www.bloomberg.com/news/articles/2026-03-27/claude-ai-maker-anthropic-said-to-weigh-ipo-as-soon-as-october",
+    "source": "Bloomberg",
+    "date": "2026-03-27T00:09:00+00:00"
+  },
+  {
+    "title": "Judge blocks Pentagon's effort to 'punish' Anthropic by labeling it a supply chain risk",
+    "body": "A federal judge in California has indefinitely blocked the Pentagon's effort to \"punish\" Anthropic by labeling it a supply chain risk and attempting to sever government ties with the AI company, ruling that those measures ran roughshod over its constitutional rights.",
+    "url": "https://www.aol.com/articles/judge-blocks-pentagon-effort-punish-002533318.html",
+    "source": "AOL",
+    "date": "2026-03-27T01:24:00+00:00"
+  },
+  {
     "title": "Judge blocks Pentagon from labeling Anthropic AI a \"supply chain risk\"",
     "body": "A judge has blocked the Trump administration from labeling Anthropic a supply chain risk and cutting off all federal work with the artificial intelligence firm, an early win for Anthropic in its bitter feud with the government.",
     "url": "https://www.msn.com/en-us/news/us/judge-blocks-pentagon-from-labeling-anthropic-ai-a-supply-chain-risk/ar-AA1ZuGnl",
     "source": "CBS News",
     "date": "2026-03-27T00:14:45+00:00"
-  },
-  {
-    "title": "Judge blocks Pentagon's supply chain risk designation for Anthropic",
-    "body": "A federal judge sided with Anthropic in its fight with the Pentagon on Thursday, blocking its designation of the artificial intelligence company as a supply chain risk, for now. U.S. District Judge Rita Lin also blocked President Trump's order that the government cut all contracts with Anthropic,",
-    "url": "https://www.msn.com/en-us/news/politics/judge-blocks-pentagon-s-supply-chain-risk-designation-for-anthropic/ar-AA1ZujXP",
-    "source": "The Hill",
-    "date": "2026-03-26T23:41:16+00:00"
   },
   {
     "title": "OpenAI just nixed ChatGPT's erotic 'adult' mode",
@@ -120,10 +120,10 @@
   },
   {
     "title": "ChatGPT's taste for literary nonsense sparks alarm",
-    "body": "OpenAI's GPT models can often be fooled into declaring that \"pseudo-literary\" nonsense is great, a German researcher has found. Christoph Heilig said he discovered that they consistently rated \"nonsense\" higher — including when their so-called \"reasoning\" features were activated — which could have stark implications for the development of artificial intelligence.",
-    "url": "https://www.iraqinews.com/tech/chatgpts-taste-for-literary-nonsense-sparks-alarm/",
-    "source": "Iraqi News",
-    "date": "2026-03-26T17:14:00+00:00"
+    "body": "OpenAI's GPT models can often be fooled into declaring that \"pseudo-literary\" nonsense is great, a German researcher has found.",
+    "url": "https://www.france24.com/en/live-news/20260326-chatgpt-s-taste-for-literary-nonsense-sparks-alarm",
+    "source": "France 24",
+    "date": "2026-03-26T16:31:00+00:00"
   },
   {
     "title": "DeepSeek's Massive New Model & ChatGPT 5.5 is Finally Ready",
@@ -133,11 +133,11 @@
     "date": "2026-03-26T13:48:00+00:00"
   },
   {
-    "title": "AI chatbots are sucking up to you—with consequences for your relationships",
-    "body": "Large language model (LLM) chatbots have a tendency toward flattery. The researchers demonstrated that receiving interpersonal advice from a sycophantic artificial intelligence chatbot can make",
-    "url": "https://www.yahoo.com/news/articles/ai-chatbots-sucking-consequences-relationships-180000514.html",
-    "source": "Yahoo",
-    "date": "2026-03-27T00:06:00+00:00"
+    "title": "'QuitGPT' boycott could spark AI flashpoint as ethical use debate rages",
+    "body": "AI companies are stuck in a \"perfect storm\" of trying to control the use and output of their platforms while maintaining competitive profits, as millions of people boycott the technology, experts say.",
+    "url": "https://www.abc.net.au/news/2026-03-27/quitgpt-openai-boycott-movement-ethical-debate-explained/106486206",
+    "source": "ABC (Australian Broadcasting Corporation)",
+    "date": "2026-03-26T23:11:00+00:00"
   },
   {
     "title": "Google Gemini now lets you import your chats and data from other AI apps",
@@ -189,11 +189,18 @@
     "date": "2026-03-26T07:58:00+00:00"
   },
   {
-    "title": "Multi-Agent AI Is Coming to Israeli SMBs",
-    "body": "The most interesting AI development of 2026 is not happening at Google or OpenAI. It is happening in a dental clinic in Haifa, a real estate office in Be'er Sheva, and a restaur",
-    "url": "https://blogs.timesofisrael.com/multi-agent-ai-is-coming-to-israeli-smbs/",
-    "source": "The Blogs | The Times of Israel",
-    "date": "2026-03-26T18:46:00+00:00"
+    "title": "Hidden cost of AI layoffs: Why firms may lose in the long run",
+    "body": "The rush to replace human labor may create unintended economic consequences not just for workers, but for firms themselves. A new study finds that companies adopting AI-driven automation may collectively undermine demand in the economy,",
+    "url": "https://www.devdiscourse.com/article/business/3848324-hidden-cost-of-ai-layoffs-why-firms-may-lose-in-the-long-run",
+    "source": "Devdiscourse",
+    "date": "2026-03-26T05:11:00+00:00"
+  },
+  {
+    "title": "Commport Communications Partners with Photon Commerce to Launch AI-Powered Smart OCR for EDI Automation",
+    "body": "Commport and Photon Commerce partner to launch AI-powered Doc2EDI, automating document-to-EDI workflows with unmatched",
+    "url": "https://www.freep.com/press-release/story/171643/commport-communications-partners-with-photon-commerce-to-launch-ai-powered-smart-ocr-for-edi-automation/",
+    "source": "Detroit Free Press",
+    "date": "2026-03-26T20:34:00+00:00"
   },
   {
     "title": "AI Impact: Is AI Making Your Marketing Too Efficient?",
@@ -201,13 +208,6 @@
     "url": "https://www.newsweek.com/ai-impact-is-ai-making-your-marketing-too-efficient-11742013",
     "source": "Newsweek",
     "date": "2026-03-26T16:53:00+00:00"
-  },
-  {
-    "title": "Hidden cost of AI layoffs: Why firms may lose in the long run",
-    "body": "The rush to replace human labor may create unintended economic consequences not just for workers, but for firms themselves. A new study finds that companies adopting AI-driven automation may collectively undermine demand in the economy,",
-    "url": "https://www.devdiscourse.com/article/business/3848324-hidden-cost-of-ai-layoffs-why-firms-may-lose-in-the-long-run",
-    "source": "Devdiscourse",
-    "date": "2026-03-26T05:11:00+00:00"
   },
   {
     "title": "エクシード、オンラインイベント「生成AIでRobloxのゲーム制作」4月29日開催",

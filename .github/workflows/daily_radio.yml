@@ -29,15 +29,16 @@ jobs:
       - name: ラジオ生成
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
-          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
         run: python generate_radio.py
 
-      # 音声をGitHub Pagesで公開（LINEで再生するため）
+      # 音声をASCIIファイル名でdocs/にコピー（GitHub Pages用）
       - name: GitHub Pages用に音声をコピー
         run: |
           mkdir -p docs/audio
-          cp 音声/*.mp3 docs/audio/ 2>/dev/null || true
+          TODAY=$(date +%Y-%m-%d)
+          if [ -f "音声/${TODAY}_AIニュースラジオ.mp3" ]; then
+            cp "音声/${TODAY}_AIニュースラジオ.mp3" "docs/audio/${TODAY}.mp3"
+          fi
 
       - name: 生成ファイルをコミット
         run: |
@@ -47,8 +48,12 @@ jobs:
           git diff --cached --quiet || git commit -m "🎙 AIニュースラジオ $(date +%Y-%m-%d) 生成"
           git push
 
-      # LINE音声送信（GitHub Pages URLが確定した後）
-      - name: LINE音声メッセージ送信
+      # GitHub Pagesのデプロイを待つ
+      - name: GitHub Pages デプロイ待ち
+        run: sleep 30
+
+      # LINE送信
+      - name: LINE送信
         env:
           LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
           LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
@@ -57,17 +62,26 @@ jobs:
           REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
           REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
           TODAY=$(date +%Y-%m-%d)
-          AUDIO_FILE="docs/audio/${TODAY}_AIニュースラジオ.mp3"
+          AUDIO_FILE="docs/audio/${TODAY}.mp3"
 
           if [ -f "$AUDIO_FILE" ]; then
-            # ファイルサイズからdurationを概算（32kbps）
-            SIZE=$(stat -c%s "$AUDIO_FILE" 2>/dev/null || stat -f%z "$AUDIO_FILE")
+            SIZE=$(stat -c%s "$AUDIO_FILE")
             DURATION=$(( SIZE * 8 / 32000 * 1000 ))
+            AUDIO_URL="https://${REPO_OWNER}.github.io/${REPO_NAME}/audio/${TODAY}.mp3"
 
-            AUDIO_URL="https://${REPO_OWNER}.github.io/${REPO_NAME}/audio/${TODAY}_AI%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%83%A9%E3%82%B8%E3%82%AA.mp3"
+            # 音声URLが有効か確認（リトライ付き）
+            for i in 1 2 3; do
+              STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$AUDIO_URL")
+              if [ "$STATUS" = "200" ]; then
+                echo "音声URL確認OK: $AUDIO_URL"
+                break
+              fi
+              echo "Pages未デプロイ (${STATUS})、30秒待機... (${i}/3)"
+              sleep 30
+            done
 
-            # まずテキスト通知
-            curl -s -X POST https://api.line.me/v2/bot/message/push \
+            # 音声メッセージ送信
+            RESULT=$(curl -s -X POST https://api.line.me/v2/bot/message/push \
               -H "Content-Type: application/json" \
               -H "Authorization: Bearer ${LINE_CHANNEL_TOKEN}" \
               -d "{
@@ -75,7 +89,7 @@ jobs:
                 \"messages\": [
                   {
                     \"type\": \"text\",
-                    \"text\": \"🎙 AIニュースラジオ ${TODAY}\\n\\n音声を生成しました！下の再生ボタンを押してください。\"
+                    \"text\": \"🎙 AIニュースラジオ ${TODAY}\n\n音声を生成しました！下の再生ボタンを押してください。\"
                   },
                   {
                     \"type\": \"audio\",
@@ -83,6 +97,23 @@ jobs:
                     \"duration\": ${DURATION}
                   }
                 ]
-              }"
-            echo "LINE送信完了"
+              }")
+            echo "LINE送信結果: $RESULT"
+
+            # 音声送信が失敗した場合、テキストだけ送信
+            if echo "$RESULT" | grep -q "error\|Failed"; then
+              echo "音声送信失敗、テキストのみ再送..."
+              curl -s -X POST https://api.line.me/v2/bot/message/push \
+                -H "Content-Type: application/json" \
+                -H "Authorization: Bearer ${LINE_CHANNEL_TOKEN}" \
+                -d "{
+                  \"to\": \"${LINE_USER_ID}\",
+                  \"messages\": [
+                    {
+                      \"type\": \"text\",
+                      \"text\": \"🎙 AIニュースラジオ ${TODAY}\n\n音声を生成しました！\n🎧 こちらから聴けます:\n${AUDIO_URL}\"
+                    }
+                  ]
+                }"
+            fi
           fi

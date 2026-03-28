@@ -2,9 +2,8 @@ name: AIニュースラジオ 毎朝自動生成
 
 on:
   schedule:
-    # 毎朝 7:00 JST（= 22:00 UTC 前日）に実行
     - cron: "0 22 * * *"
-  workflow_dispatch: # 手動実行も可能
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,21 +17,35 @@ jobs:
       - name: チェックアウト
         uses: actions/checkout@v4
 
+      - name: 休日チェック
+        id: rest_check
+        run: |
+          TODAY=$(TZ=Asia/Tokyo date +%Y-%m-%d)
+          if python3 -c "import json; days=json.load(open('rest_days.json'))['rest_days']; exit(0 if '${TODAY}' in days else 1)" 2>/dev/null; then
+            echo "今日 (${TODAY}) は休有持 — スキップします"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Python セットアップ
+        if: steps.rest_check.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: パッケージインストール
+        if: steps.rest_check.outputs.skip != 'true'
         run: pip install -r requirements.txt
 
       - name: ラジオ生成
+        if: steps.rest_check.outputs.skip != 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python generate_radio.py
 
-      # 音声をASCIIファイル名でdocs/にコピー（GitHub Pages用）
       - name: GitHub Pages用に音声をコピー
+        if: steps.rest_check.outputs.skip != 'true'
         run: |
           mkdir -p docs/audio
           TODAY=$(date +%Y-%m-%d)
@@ -41,6 +54,7 @@ jobs:
           fi
 
       - name: 生成ファイルをコミット
+        if: steps.rest_check.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -48,12 +62,12 @@ jobs:
           git diff --cached --quiet || git commit -m "🎙 AIニュースラジオ $(date +%Y-%m-%d) 生成"
           git push
 
-      # GitHub Pagesのデプロイを待つ
       - name: GitHub Pages デプロイ待ち
+        if: steps.rest_check.outputs.skip != 'true'
         run: sleep 30
 
-      # LINE送信
       - name: LINE送信
+        if: steps.rest_check.outputs.skip != 'true'
         env:
           LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
           LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
@@ -69,18 +83,16 @@ jobs:
             DURATION=$(( SIZE * 8 / 32000 * 1000 ))
             AUDIO_URL="https://${REPO_OWNER}.github.io/${REPO_NAME}/audio/${TODAY}.mp3"
 
-            # 音声URLが有効か確認（リトライ付き）
             for i in 1 2 3; do
               STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$AUDIO_URL")
               if [ "$STATUS" = "200" ]; then
-                echo "音声URL確認OK: $AUDIO_URL"
+                echo "音声URL確認OK"
                 break
               fi
-              echo "Pages未デプロイ (${STATUS})、30秒待機... (${i}/3)"
+              echo "Pages未デプロイ、30秒待機... (${i}/3)"
               sleep 30
             done
 
-            # 音声メッセージ送信
             RESULT=$(curl -s -X POST https://api.line.me/v2/bot/message/push \
               -H "Content-Type: application/json" \
               -H "Authorization: Bearer ${LINE_CHANNEL_TOKEN}" \
@@ -89,7 +101,7 @@ jobs:
                 \"messages\": [
                   {
                     \"type\": \"text\",
-                    \"text\": \"🎙 AIニュースラジオ ${TODAY}\n\n音声を生成しました！下の再生ボタンを押してください。\"
+                    \"text\": \"🎙 AIニュースラジオ ${TODAY}\n\n▶ 下の音声を再生してください\"
                   },
                   {
                     \"type\": \"audio\",
@@ -100,9 +112,7 @@ jobs:
               }")
             echo "LINE送信結果: $RESULT"
 
-            # 音声送信が失敗した場合、テキストだけ送信
             if echo "$RESULT" | grep -q "error\|Failed"; then
-              echo "音声送信失敗、テキストのみ再送..."
               curl -s -X POST https://api.line.me/v2/bot/message/push \
                 -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${LINE_CHANNEL_TOKEN}" \
@@ -111,7 +121,7 @@ jobs:
                   \"messages\": [
                     {
                       \"type\": \"text\",
-                      \"text\": \"🎙 AIニュースラジオ ${TODAY}\n\n音声を生成しました！\n🎧 こちらから聴けます:\n${AUDIO_URL}\"
+                      \"text\": \"🎙 AIニュースラジオ ${TODAY}\n\n🎧 こちらから聴けます:\n${AUDIO_URL}\"
                     }
                   ]
                 }"

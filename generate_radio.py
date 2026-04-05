@@ -86,7 +86,33 @@ def search_news() -> list[dict]:
                 print(f"  検索エラー ({query}): {e}")
 
     print(f"  合計 {len(all_results)} 件のニュースを収集しました")
-    return all_results
+
+    # 前日までのリサーチログと重複排除
+    past_titles = set()
+    past_urls = set()
+    for log_file in RESEARCH_DIR.glob("*_リサーチ.json"):
+        if log_file.name.startswith(TODAY):
+            continue  # 今日のログはスキップ
+        try:
+            past_data = json.loads(log_file.read_text(encoding="utf-8"))
+            for item in past_data:
+                past_titles.add(item.get("title", "").strip().lower())
+                past_urls.add(item.get("url", ""))
+        except Exception:
+            pass
+
+    filtered = []
+    for r in all_results:
+        title_lower = r["title"].strip().lower()
+        if r["url"] in past_urls or title_lower in past_titles:
+            continue
+        filtered.append(r)
+
+    removed = len(all_results) - len(filtered)
+    if removed > 0:
+        print(f"  前日以前と重複する {removed} 件を除外しました")
+    print(f"  最終: {len(filtered)} 件のニュース")
+    return filtered
 
 
 # ---------------------------------------------------------------------------

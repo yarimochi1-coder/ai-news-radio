@@ -1,8 +1,9 @@
 name: AIニュースラジオ 毎朝自動生成
 
 on:
-  schedule:
-    - cron: "0 22 * * *"
+  # 自動実行は停止中。手動実行のみ。
+  # schedule:
+  #   - cron: "0 22 * * *"
   workflow_dispatch:
 
 permissions:
